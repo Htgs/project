@@ -1,0 +1,212 @@
+<template>
+    <div class="calendar">
+        <!-- <table class="calendar-days">
+            <tr colspan="7">
+                <th 
+                v-for="week in weeks"
+                v-bind:class="{'weekend':week == '六' || week == '日'}">
+                    {{week}}
+                </th>
+            </tr>
+            <tr v-for="(day,k1) in days">
+                <td 
+                    v-for="(child,k2) in day"
+                    v-bind:class="{'selected':child.selected,'disabled':child.disabled}">
+                    <span>{{child.day}}</span>
+                </td>
+            </tr>
+        </table> -->
+    </div>
+</template>
+
+<script>
+    // export default {
+    //     props: {
+    //         weeks: {
+    //             type: Array,
+    //             default: function() {
+    //                 return ['日','一','二','三','四','五','六']
+    //             }
+    //         },
+    //         months: {
+    //             type: Array,
+    //             default: function() {
+    //                 return ['一','二','三','四','五','六','七','八','九','十','十一','十二']
+    //             }
+    //         }
+    //     },
+    //     created() {
+    //         this.init()
+    //     },
+    //     data (){
+    //         return {
+    //             year: 0,
+    //             month: 0,
+    //             day: 0,
+    //             hour: 0,
+    //             days: [],
+    //             today: [],
+    //             currentMonth: Number,
+    //             monthString: ""
+    //         }
+    //     },
+    //     methods: {
+    //         init: function () {
+    //             var now = new Date();
+    //             this.year = now.getFullYear();
+    //             this.month = now.getMonth();
+    //             this.day = now.getDate();
+    //             this.hour = now.getHours();
+    //             this.monthString = this.months[this.month];
+    //             this.render(this.year,this.month);
+    //         },
+    //         render: function(y,m){
+                
+    //             var firstDayOfMonth = new Date(y,m,1).getDay();//获取当月第一天是星期几
+    //             var lastDateOfMonth = new Date(y,m+1,0).getDate();//获取当月一共有多少天
+    //             var lastDayOfLastMonth = new Date(y, m, 0).getDate();
+
+    //             this.currentMonth = m;
+
+    //             var i,line = 0,temp = [];
+    //             for(i = 1;i<=lastDateOfMonth;i++){
+    //                 var dow = new Date(y,m,i).getDay(); //获取当前月份每天对应星期几
+
+    //                 if (dow == 0) {
+    //                     temp[line] = []
+    //                 } else if (i == 1) {
+    //                     temp[line] = []
+    //                     var k = lastDayOfLastMonth - firstDayOfMonth + 1
+    //                     for (var j = 0; j < firstDayOfMonth; j++) {
+    //                         temp[line].push({
+    //                             day: k,
+    //                             disabled: true
+    //                         })
+    //                         k++;
+    //                     }
+    //                 }
+
+    //                 var chk = new Date()
+    //                 var chkY = chk.getFullYear()
+    //                 var chkM = chk.getMonth()
+                    
+    //                 if (chkY == this.year && chkM == this.month && i == this.day) {
+    //                     temp[line].push({
+    //                         day: i,
+    //                         selected: true
+    //                     })
+    //                     this.today = [line, temp[line].length - 1]
+    //                 }else{
+    //                      var options = {
+    //                         day: i,
+    //                         selected: false,
+    //                     }
+    //                     temp[line].push(options)
+    //                 }
+
+    //                 if(dow == 6){
+    //                     line++;
+    //                 }
+    //                 else if(i == lastDateOfMonth){
+    //                     var k = 1
+    //                     for (dow; dow < 6; dow++) {
+    //                         temp[line].push({
+    //                             day: k,
+    //                             disabled: true
+    //                         })
+    //                         k++
+    //                     }
+    //                 }
+
+    //             }
+
+    //             this.days = temp;
+    //         },
+    //         // 上月
+    //         prev: function(e) {
+    //             e.stopPropagation()
+    //             if (this.month == 0) {
+    //                 this.month = 11
+    //                 this.year = parseInt(this.year) - 1
+    //             } else {
+    //                 this.month = parseInt(this.month) - 1
+    //             }
+    //             this.monthString=this.months[this.month]
+    //             this.render(this.year, this.month)
+    //         },
+    //         //  下月
+    //         next: function(e) {
+    //             e.stopPropagation()
+    //             if (this.month == 11) {
+    //                 this.month = 0
+    //                 this.year = parseInt(this.year) + 1
+    //             } else {
+    //                 this.month = parseInt(this.month) + 1
+    //             }
+    //             this.monthString=this.months[this.month]
+    //             this.render(this.year, this.month)
+    //         },
+    //         toucheddd: function(e) {
+    //             console.dir(e);
+    //         }
+    //     },
+    //     computed: {
+            
+    //         // 读取和设置
+    //         aPlus: {
+    //           get: function () {
+    //             return this.a + 1
+    //           },
+    //           set: function (v) {
+    //             this.a = v - 1
+    //           }
+    //         }
+    //     },
+    //     watch: {
+
+    //     }
+    // }
+</script>
+
+<style scoped>
+    
+    .calendar{}
+    .calendar-days{
+        width: 100%;
+        text-align: center;
+    }
+    .calendar-days th{
+        background-color: #F5F5F5;
+        color: #A8ADB1;
+        padding: 0.2em 0;
+        font-size: 0.8em;
+        font-weight: normal;
+    }
+    .calendar-days th.week {
+        color: #F1BD43;
+    }
+    .calendar-days td{
+        position: relative;
+        height: 3.5em;
+        color: #606873;
+        font-size: 0.9em;
+        line-height: 3.5em;
+    }
+    .calendar-days td.selected::before{
+        content: '';
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: #7991E7;
+        border-radius: 50%;
+    }
+    .calendar-days td.selected span{
+        position: relative;
+        color: #fff;
+    }
+    .calendar-days td.disabled{
+        color: #D9D9D9;
+    }
+</style>
