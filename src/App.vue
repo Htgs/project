@@ -1,23 +1,36 @@
 <template>
   <div id="app" class="page">
-    <div class="page-title">
-      <h1>生产计划管理</h1>
-    </div>
+    <pagetitle></pagetitle>
+    <!-- <selectbar></selectbar>
+    <planlist></planlist>
+    <pager></pager> -->
+
     <router-view></router-view>
   </div>
 </template>
 
 <script>
-export default {
-  name: 'app'
-}
+  var PageTitle = require('./components/PageTitle.vue')
+  var SelectBar = require('./components/SelectBar.vue')
+  var PlanList = require('./components/PlanList.vue')
+  var Pager = require('./components/Pager.vue')
+  var SetTime = require('./components/SetTime.vue')
+  export default {
+    name: 'app',
+    components: {
+      'pagetitle': PageTitle,
+      'selectbar': SelectBar,
+      'planlist': PlanList,
+      'pager': Pager,
+      'settime': SetTime
+    }
+  }
 </script>
 
 <style>
 @import './assets/css/style.css';
-
 .page{
-  width: 100%;
+  width: 10rem;
   height: 100%;
   position: absolute;
   top: 0;
@@ -25,16 +38,5 @@ export default {
   bottom: 0;
   left: 0;
   z-index: 1000;
-}
-.page-title{
-  background-color: #009ACA;
-  text-align: center;
-  color: #fff;
-}
-.page-title h1{
-  font-size: 1em;
-  font-weight: normal;
-  margin: 0;
-  padding: 0.33em;
 }
 </style>
