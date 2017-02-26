@@ -193,12 +193,15 @@ a {
 a:active {
   color: #0a8ddf;
 }
-dl,ul,ol,dt,dd,li{
+dl,ul,ol,dt,dd,li {
   margin: 0;
   padding: 0;
   list-style-type: none;
 }
-
+i,s {
+  font-style: normal;
+  text-decoration: none;
+}
 
 .clearfix {}
 .clearfix::after{

@@ -119,43 +119,45 @@
 </script>
 
 <style scoped>
-  .calendar{}
+  .calendar{
+    width: 3.75rem;
+    font-size: 0.12rem;
+  }
   .calendar-days{
       width: 100%;
       text-align: center;
   }
   .calendar-days th{
-      background-color: #F5F5F5;
-      color: #A8ADB1;
-      padding: 0.2em 0;
-      font-size: 0.8em;
+      background-color: #F5F6F8;
+      color: #A6AFB8;
+      padding: 0.1rem 0;
       font-weight: normal;
   }
-  .calendar-days th.week {
-      color: #F1BD43;
+  .calendar-days th.weekend {
+      color: #F9BF15;
   }
   .calendar-days td{
       position: relative;
-      height: 3.5em;
-      color: #606873;
-      font-size: 0.9em;
-      line-height: 3.5em;
+      color: #3E4D62;
+      padding: 0.185rem 0;
   }
   .calendar-days td.selected::before{
       content: '';
-      width: 100%;
-      height: 100%;
+      width: 0.45rem;
+      height: 0.45rem;
       position: absolute;
-      top: 0;
-      left: 0;
+      top: 50%;
+      left: 50%;
       background-color: #7991E7;
       border-radius: 50%;
+      margin-top: -0.225rem;
+      margin-left: -0.225rem;
   }
   .calendar-days td.selected span{
       position: relative;
       color: #fff;
   }
   .calendar-days td.disabled{
-      color: #D9D9D9;
+      color: #DADBE0;
   }
 </style>

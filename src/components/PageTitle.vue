@@ -2,7 +2,13 @@
     <div class="header">
       <span class="header-left">取消</span>
       <h1>生产计划管理</h1>
-      <span class="header-right">完成</span>
+      <!-- <span class="header-right">完成</span> -->
+      <div class="header-msg">
+        <i>
+          <b>4</b>
+        </i>
+        <s>消息</s>
+      </div>
     </div>
 </template>
 
@@ -28,18 +34,50 @@
   font-weight: normal;
   margin: 0;
 }
-.header-left{
+.header-left, .header-right, .header-msg{
   position: absolute;
   top: 50%;
-  left: 0.15rem;
   transform: translateY(-50%);
   font-size: 0.17rem;
 }
+.header-left{
+  left: 0.15rem;
+}
 .header-right{
-  position: absolute;
-  top: 50%;
   right: 0.15rem;
-  transform: translateY(-50%);
-  font-size: 0.17rem;
+}
+.header-msg{
+  right: 0.15rem;
+  height: 0.33rem;
+  width: 0.22rem;
+}
+.header-msg i{
+  position: relative;
+  float: left;
+  display: block;
+  width: 0.22rem;
+  height: 0.2rem;
+  background-image: url(../assets/img/msg.png);
+  background-repeat: no-repeat;
+  background-size: 0.22rem 0.2rem;
+  background-position: center center;
+}
+.header-msg i b{
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-right: -0.055rem;
+  display: block;
+  width: 0.11rem;
+  height: 0.11rem;
+  background-color: #F77871;
+  text-align: center;
+  font-size: 0.05rem;
+  line-height: 0.11rem;
+  border-radius: 50%;
+}
+.header-msg s{
+  float: left;
+  font-size: 0.1rem;
 }
 </style>

@@ -4,7 +4,12 @@
     <!-- <selectbar></selectbar>
     <planlist></planlist>
     <pager></pager> -->
-
+    <!-- <settime></settime>
+    <setbutton></setbutton>
+    <setbutton></setbutton> -->
+    
+    <information></information>
+    <photobutton></photobutton>
     <router-view></router-view>
   </div>
 </template>
@@ -15,6 +20,10 @@
   var PlanList = require('./components/PlanList.vue')
   var Pager = require('./components/Pager.vue')
   var SetTime = require('./components/SetTime.vue')
+  var SetButton = require('./components/SetButton.vue')
+
+  var Information = require('./components/Information.vue')
+  var PhotoButton = require('./components/PhotoButton.vue')
   export default {
     name: 'app',
     components: {
@@ -22,7 +31,10 @@
       'selectbar': SelectBar,
       'planlist': PlanList,
       'pager': Pager,
-      'settime': SetTime
+      'settime': SetTime,
+      'setbutton': SetButton,
+      'information': Information,
+      'photobutton': PhotoButton
     }
   }
 </script>
