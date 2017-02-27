@@ -18,7 +18,7 @@
       <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
     </ul>
 
-    <router-link to="/list"> enter </router-link>
+    <router-link to="/index"> enter </router-link>
   </div>
 </template>
 
@@ -35,6 +35,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.hello{
+  font-size: 0.12rem;
+}
 h1, h2 {
   font-weight: normal;
 }

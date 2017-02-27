@@ -6,41 +6,36 @@
       <th>状态</th>
       <th>剩余量</th>
     </tr>
-    <tr>
-      <td>施肥</td>
-      <td>2017-1-1</td>
-      <td>未完成</td>
-      <td>100kg</td>
-    </tr>
-    <tr>
-      <td>施肥</td>
-      <td>2017-1-1</td>
-      <td>未完成</td>
-      <td>100kg</td>
-    </tr>
-    <tr>
-      <td>施肥</td>
-      <td>2017-1-1</td>
-      <td>未完成</td>
-      <td>100kg</td>
-    </tr>
-    <tr>
-      <td>施肥</td>
-      <td>2017-1-1</td>
-      <td>未完成</td>
-      <td>100kg</td>
-    </tr>
-    <tr>
-      <td>施肥</td>
-      <td>2017-1-1</td>
-      <td>未完成</td>
-      <td>100kg</td>
+    <tr v-for="(plan,i) in plans" :id="plan.planId" v-on:click="go(plan.planId)">
+      <td>{{plan.optType}}</td>
+      <td>{{plan.planDate}}</td>
+      <td>{{plan.status}}</td>
+      <td>{{plan.surplus}}</td>
     </tr>
   </table>
 </template>
 
 <script>
-    export default {}
+
+  import router from '../router/index'
+
+  // var testJson = require('../view/test.json')
+  export default {
+    props: {
+      plans: {
+        type: Array
+      }
+    },
+    methods: {
+      go: function (pid) {
+        event.stopPropagation()
+        router.push({
+          path: '/info:' + pid,
+          params: {pid: pid}
+        })
+      }
+    }
+  }
 </script>
 
 <style scoped>

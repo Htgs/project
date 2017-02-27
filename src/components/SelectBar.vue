@@ -1,7 +1,7 @@
 <template>
   <div class="selectbar">
     <form>
-      <input type="botton" value="新建" class="selectbar-btn">
+      <input type="button" value="新建" class="selectbar-btn">
       <select name="type">
         <option value="0" selected>选择类型</option>
         <option value="0">1</option>

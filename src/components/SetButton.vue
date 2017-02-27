@@ -1,18 +1,27 @@
 <template>
   <div class="setbtn">
     <div class="setbtn-left">
-      <!-- <i class="setbtn-clock"></i> -->
-      <i class="setbtn-quantity"></i>
-      <span>用量</span>
+      <i v-bind:class="[obj.isclocks ? 'setbtn-clock' : 'setbtn-quantity']"></i>
+      <span>{{obj.msg}}</span>
     </div>
     <div class="setbtn-right">
-      <span>100kg</span>
+      <span>{{obj.num}}</span>
       <i>◇</i>
     </div>
   </div>
 </template>
 
 <script>
+  export default {
+    props: {
+      obj: {
+        type: Object,
+        isclocks: Boolean,
+        msg: String,
+        num: String
+      }
+    }
+  }
 </script>
 
 <style scoped>

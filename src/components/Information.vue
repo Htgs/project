@@ -1,6 +1,6 @@
 <template>
   <div class="info">
-    <div class="info-settime">
+    <div class="info-settime" @click="go">
       <span>设置日期 <i class="clock"></i></span>
       <s>◇</s>
     </div>
@@ -8,35 +8,35 @@
       <table>
         <tr>
           <td>种植批次号</td>
-          <td colspan="2">CV12345678901234</td>
+          <td colspan="2">{{plan.num}}</td>
         </tr>
         <tr>
           <td>计划内容</td>
-          <td colspan="2">fdsafdas</td>
+          <td colspan="2">{{plan.content}}</td>
         </tr>
         <tr>
           <td>计划日期</td>
-          <td colspan="2">2017-2-22</td>
+          <td colspan="2">{{plan.planDate}}</td>
         </tr>
         <tr>
           <td>安排人员</td>
-          <td colspan="2">某某人</td>
+          <td colspan="2">{{plan.staff}}</td>
         </tr>
         <tr>
           <td>操作类型</td>
-          <td colspan="2">采购</td>
+          <td colspan="2">{{plan.optType}}</td>
         </tr>
         <tr>
           <td>状态</td>
-          <td colspan="2">未完成</td>
+          <td colspan="2">{{plan.status}}</td>
         </tr>
         <tr>
           <td>剩余量</td>
-          <td colspan="2">100kg</td>
+          <td colspan="2">{{plan.surplus}}</td>
         </tr>
         <tr>
           <td>计划总量</td>
-          <td colspan="2">400kg</td>
+          <td colspan="2">{{plan.sum}}</td>
         </tr>
       </table> 
     </div>
@@ -44,8 +44,27 @@
 </template>
 
 <script>
+  
+  import router from '../router/index'
+
   export default {
-    name: 'information'
+    name: 'information',
+    props: {
+      plan: {
+        type: Object
+      },
+      pid: {
+        type: String
+      }
+    },
+    methods: {
+      go: function () {
+        event.stopPropagation()
+        router.push({
+          path: '/set:' + this.pid
+        })
+      }
+    }
   }
 </script>
 

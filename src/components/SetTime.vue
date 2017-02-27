@@ -8,14 +8,43 @@
           {{week}}
         </th>
       </tr>
-      <tr v-for="(day,k1) in days">
-        <td
-          v-for="(child,k2) in day"
-          v-bind:class="{'selected':child.selected,'disabled':child.disabled}">
-          <span>{{child.day}}</span>
-        </td>
-      </tr>
     </table>
+    <ul class="calendar-list clearfix" id="cBox">
+      <li>
+        <table class="calendar-days">
+          <tr colspan="7" v-for="(day,k1) in prevDays">
+            <td
+              v-for="(child,k2) in day"
+              v-bind:class="{'selected':child.selected,'disabled':child.disabled}">
+              <span>{{child.day}}</span>
+            </td>
+          </tr>
+        </table>
+      </li>
+      <li>
+        <table class="calendar-days">
+          <tr colspan="7" v-for="(day,k1) in days">
+            <td
+              v-for="(child,k2) in day"
+              v-bind:class="{'selected':child.selected,'disabled':child.disabled}"
+              v-on:click="select(k1,k2,$event)" @touchstart="touch">
+              <span>{{child.day}}</span>
+            </td>
+          </tr>
+        </table>
+      </li>
+      <li>
+        <table class="calendar-days">
+          <tr colspan="7" v-for="(day,k1) in nextDays">
+            <td
+              v-for="(child,k2) in day"
+              v-bind:class="{'selected':child.selected,'disabled':child.disabled}">
+              <span>{{child.day}}</span>
+            </td>
+          </tr>
+        </table>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -44,7 +73,9 @@
         month: 0,
         day: 0,
         hour: 0,
+        prevDays: [],
         days: [],
+        nextDays: [],
         today: [],
         currentMonth: Number,
         monthString: ''
@@ -58,12 +89,22 @@
         this.day = now.getDate()
         this.hour = now.getHours()
         this.monthString = this.months[this.month]
-        this.render(this.year, this.month)
+        // 当前月的上月
+        var prevMonth = this.prevMonth(this.year, this.month)
+        this.prevDays = this.render(prevMonth.year, prevMonth.month)
+        // this.prevDays = this.prevMonth(this.year, this.month)
+        // 当前月
+        this.days = this.render(this.year, this.month)
+        // 当前月的下月
+        var nextMonth = this.nextMonth(this.year, this.month)
+        this.nextDays = this.render(nextMonth.year, nextMonth.month)
+        // this.nextDays = this.nextMonth(this.year, this.month)
       },
       render: function (y, m) {
         var firstDayOfMonth = new Date(y, m, 1).getDay() // 获取当月第一天是星期几
         var lastDateOfMonth = new Date(y, m + 1, 0).getDate() // 获取当月一共有多少天
-        var lastDayOfLastMonth = new Date(y, m, 0).getDate()
+        var lastDayOfLastMonth = new Date(y, m, 0).getDate() // 获取上月一共有多少天
+        console.log('上月一共有' + lastDayOfLastMonth)
         this.currentMonth = m
         var i
         var line = 0
@@ -86,7 +127,7 @@
           var chk = new Date()
           var chkY = chk.getFullYear()
           var chkM = chk.getMonth()
-          if (chkY === this.year && chkM === this.month && i === this.day) {
+          if (chkY === y && chkM === m && i === this.day) {
             temp[line].push({
               day: i,
               selected: true
@@ -109,10 +150,123 @@
               })
               q++
             }
+            if (temp.length < 6) {
+              temp[5] = []
+              for (var ex = 0; ex <= 6; ex++) {
+                temp[5].push({
+                  day: q,
+                  disabled: true
+                })
+                q++
+              }
+            }
           }
         }
-        this.days = temp
-        console.log(this.monthString)
+        if (temp.length < 6) {
+          var p = 1
+          temp[5] = []
+          for (var ex1 = 0; ex1 <= 6; ex1++) {
+            temp[5].push({
+              day: p,
+              disabled: true
+            })
+            p++
+          }
+        }
+        return temp
+      },
+      // 上月
+      prevMonth: function (y, m) {
+        var year = y
+        var month = m
+        if (month === 0) {
+          month = 11
+          year = parseInt(this.year) - 1
+        } else {
+          month = parseInt(this.month) - 1
+        }
+        return {
+          year: year,
+          month: month
+        }
+      },
+      //  下月
+      nextMonth: function (y, m) {
+        var year = y
+        var month = m
+        if (month === 11) {
+          month = 0
+          year = parseInt(this.year) + 1
+        } else {
+          month = parseInt(this.month) + 1
+        }
+        // return this.render(year, month)
+        return {
+          year: year,
+          month: month
+        }
+      },
+      select: function (k1, k2, e) {
+        if (e !== undefined) e.stopPropagation()
+        var selectedDay = this.days[k1][k2]
+        this.days.forEach(v => {
+          v.forEach(vv => {
+            vv.selected = false
+          })
+        })
+        if (selectedDay.disabled === true) {
+          var box = document.querySelector('#cBox')
+          if (k1 === 0) {
+            var prevMonth = this.prevMonth(this.year, this.month)
+            this.year = prevMonth.year
+            this.month = prevMonth.month
+            this.day = selectedDay.day
+            this.prev(box)
+          } else if (k1 === this.days.length - 1 || k1 === this.days.length - 2) {
+            var nextMonth = this.nextMonth(this.year, this.month)
+            this.year = nextMonth.year
+            this.month = nextMonth.month
+            this.day = selectedDay.day
+            this.next(box)
+          }
+          this.curMonth(this.year, this.month, this.day)
+        } else {
+          this.day = selectedDay.day
+          this.days[k1][k2].selected = true
+        }
+      },
+      curMonth: function (y, m, d) {
+        this.monthString = this.months[m]
+        // 当前月
+        this.days = this.render(y, m)
+        // 当前月的上月
+        var prevMonth = this.prevMonth(y, m)
+        this.prevDays = this.render(prevMonth.year, prevMonth.month)
+        // this.prevDays = this.prevMonth(this.year, this.month)
+        // 当前月的下月
+        var nextMonth = this.nextMonth(y, m)
+        this.nextDays = this.render(nextMonth.year, nextMonth.month)
+      },
+      prev: function (el) {
+        el.classList.add('prev')
+        el.addEventListener('transitionend', function () {
+          el.classList.remove('prev')
+        }, false)
+        el.addEventListener('webkitTransitionend', function () {
+          el.classList.remove('prev')
+        }, false)
+      },
+      next: function (el) {
+        el.classList.add('next')
+        el.addEventListener('transitionend', function () {
+          el.classList.remove('next')
+        }, false)
+        el.addEventListener('webkitTransitionend', function () {
+          el.classList.remove('prev')
+        }, false)
+      },
+      touch: function (e) {
+        console.dir(e)
       }
     }
   }
@@ -122,9 +276,10 @@
   .calendar{
     width: 3.75rem;
     font-size: 0.12rem;
+    overflow: hidden;
   }
   .calendar-days{
-      width: 100%;
+      width: 3.75rem;
       text-align: center;
   }
   .calendar-days th{
@@ -159,5 +314,21 @@
   }
   .calendar-days td.disabled{
       color: #DADBE0;
+  }
+  .calendar-list {
+    width: 11.25rem;
+    transform: translateX(-3.75rem);
+  }
+  .calendar-list li{
+    float: left;
+    width: 3.75rem;
+  }
+  .prev {
+    transform: translateX(0rem);
+    transition: all .3s ease;
+  }
+  .next {
+    transform: translateX(-7.5rem);
+    transition: all .3s ease;
   }
 </style>

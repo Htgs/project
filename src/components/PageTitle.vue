@@ -1,9 +1,9 @@
 <template>
     <div class="header">
-      <span class="header-left">取消</span>
+      <span v-if="curHash == 'index' ? false : true" class="header-left" @click="goback">取消</span>
       <h1>生产计划管理</h1>
-      <!-- <span class="header-right">完成</span> -->
-      <div class="header-msg">
+      <span v-if="curHash == 'index' ? false : true" class="header-right">完成</span>
+      <div v-else class="header-msg">
         <i>
           <b>4</b>
         </i>
@@ -13,10 +13,22 @@
 </template>
 
 <script>
-  console.log('PageTitle loaded!')
+
+  import router from '../router/index'
 
   export default {
-    name: 'PageTitle'
+    name: 'PageTitle',
+    props: {
+      curHash: {
+        type: String,
+        default: ''
+      }
+    },
+    methods: {
+      goback () {
+        router.go(-1)
+      }
+    }
   }
 </script>
 
@@ -49,7 +61,7 @@
 .header-msg{
   right: 0.15rem;
   height: 0.33rem;
-  width: 0.22rem;
+  width: 0.3rem;
 }
 .header-msg i{
   position: relative;

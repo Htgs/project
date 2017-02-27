@@ -1,0 +1,13 @@
+{
+    "data": {
+        "planId": 5,
+        "num": "CV12345678901234",
+        "content": "fdsafdas",
+        "planDate": "2017-1-1",
+        "staff": "某某人",
+        "optType": "采购",
+        "status": "未完成",
+        "surplus": "100kg",
+        "sum": "999kg"
+    }
+}
