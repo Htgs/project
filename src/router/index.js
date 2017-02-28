@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Hello from '../components/Hello'
-import Index from '../view/Index'
+import Home from '../view/Home'
 import Info from '../view/Info'
 import Set from '../view/Set'
 
@@ -15,9 +15,9 @@ export default new Router({
       component: Hello
     },
     {
-      path: '/index',
-      name: 'Index',
-      component: Index
+      path: '/home',
+      name: 'Home',
+      component: Home
     },
     {
       path: '/info:id',
@@ -26,7 +26,7 @@ export default new Router({
     },
     {
       path: '/set:id',
-      name: 'set',
+      name: 'Set',
       component: Set
     }
   ]

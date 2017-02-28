@@ -18,7 +18,7 @@
       <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
     </ul>
 
-    <router-link to="/index"> enter </router-link>
+    <router-link to="/home"> enter </router-link>
   </div>
 </template>
 

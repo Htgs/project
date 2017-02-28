@@ -1,9 +1,9 @@
 <template>
   <div id="set">
     <pagetitle></pagetitle>
-    <settime></settime>
+    <settime v-on:senddate="getdate"></settime>
     <setbutton :obj="obj1"></setbutton>
-    <setbutton :obj="obj2"></setbutton>
+    <setbutton :obj="obj2" style="margin-top: -0.01rem"></setbutton>
   </div>
 </template>
 
@@ -26,6 +26,12 @@
           isclocks: false,
           msg: '用量',
           num: '100kg'
+        },
+        calendar: {
+          year: 0,
+          month: 0,
+          day: 0,
+          hour: 0
         }
       }
     },
@@ -33,6 +39,22 @@
       'pagetitle': PageTitle,
       'settime': SetTime,
       'setbutton': SetButton
+    },
+    methods: {
+      changeda: function () {
+        this.curHash += 'r'
+      },
+      getdate: function (y, m, d) {
+        this.calendar.year = y
+        this.calendar.month = m
+        this.calendar.day = d
+        console.dir(this)
+      }
+    },
+    watch: {
+      curHash: function (v, nv) {
+        console.log('a is change')
+      }
     }
   }
 </script>

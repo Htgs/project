@@ -1,8 +1,10 @@
 <template>
   <div id="info">
     <pagetitle :curHash="curHash"></pagetitle>
-    <information :pid="pid" :plan="plan"></information>
-    <photobutton></photobutton>
+    <form enctype="m">
+      <information :pid="pid" :plan="plan"></information>
+      <photobutton></photobutton>
+    </form>
   </div>
 </template>
 

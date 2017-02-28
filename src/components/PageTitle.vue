@@ -1,7 +1,7 @@
 <template>
     <div class="header">
       <span v-if="curHash == 'index' ? false : true" class="header-left" @click="goback">取消</span>
-      <h1>生产计划管理</h1>
+      <h1>{{title}}</h1>
       <span v-if="curHash == 'index' ? false : true" class="header-right">完成</span>
       <div v-else class="header-msg">
         <i>
@@ -18,6 +18,12 @@
 
   export default {
     name: 'PageTitle',
+    // data () {
+    //   title: {
+    //     type: String,
+    //     default: '生产计划管理'
+    //   }
+    // },
     props: {
       curHash: {
         type: String,
@@ -27,6 +33,11 @@
     methods: {
       goback () {
         router.go(-1)
+      }
+    },
+    computed: {
+      title () {
+        return this.$store.state.title
       }
     }
   }

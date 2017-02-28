@@ -9,7 +9,9 @@
         </th>
       </tr>
     </table>
-    <ul class="calendar-list clearfix" id="cBox">
+    <transition name="slide">
+    <ul class="calendar-list clearfix" id="cBox"
+      v-gesture:swiper="{methods:swipe}">
       <li>
         <table class="calendar-days">
           <tr colspan="7" v-for="(day,k1) in prevDays">
@@ -24,10 +26,11 @@
       <li>
         <table class="calendar-days">
           <tr colspan="7" v-for="(day,k1) in days">
+              <!-- v-on:click="select(k1,k2,$event)" -->
             <td
               v-for="(child,k2) in day"
               v-bind:class="{'selected':child.selected,'disabled':child.disabled}"
-              v-on:click="select(k1,k2,$event)" @touchstart="touch">
+              v-gesture:tap="{ methods:select, k1:k1, k2:k2 }">
               <span>{{child.day}}</span>
             </td>
           </tr>
@@ -45,10 +48,14 @@
         </table>
       </li>
     </ul>
+    </transition>
   </div>
 </template>
 
 <script>
+
+  import { mapMutations } from 'vuex'
+
   export default {
     props: {
       weeks: {
@@ -72,7 +79,6 @@
         year: 0,
         month: 0,
         day: 0,
-        hour: 0,
         prevDays: [],
         days: [],
         nextDays: [],
@@ -82,12 +88,15 @@
       }
     },
     methods: {
+
+      ...mapMutations([
+        'setmonth'
+      ]),
       init: function () {
         var now = new Date()
         this.year = now.getFullYear()
         this.month = now.getMonth()
         this.day = now.getDate()
-        this.hour = now.getHours()
         this.monthString = this.months[this.month]
         // 当前月的上月
         var prevMonth = this.prevMonth(this.year, this.month)
@@ -104,7 +113,7 @@
         var firstDayOfMonth = new Date(y, m, 1).getDay() // 获取当月第一天是星期几
         var lastDateOfMonth = new Date(y, m + 1, 0).getDate() // 获取当月一共有多少天
         var lastDayOfLastMonth = new Date(y, m, 0).getDate() // 获取上月一共有多少天
-        console.log('上月一共有' + lastDayOfLastMonth)
+        // console.log('上月一共有' + lastDayOfLastMonth)
         this.currentMonth = m
         var i
         var line = 0
@@ -206,7 +215,11 @@
           month: month
         }
       },
-      select: function (k1, k2, e) {
+      select: function (params) {
+        var k1 = params.k1
+        var k2 = params.k2
+        var e = params.e
+        var box = document.querySelector('#cBox')
         if (e !== undefined) e.stopPropagation()
         var selectedDay = this.days[k1][k2]
         this.days.forEach(v => {
@@ -215,18 +228,19 @@
           })
         })
         if (selectedDay.disabled === true) {
-          var box = document.querySelector('#cBox')
           if (k1 === 0) {
             var prevMonth = this.prevMonth(this.year, this.month)
             this.year = prevMonth.year
             this.month = prevMonth.month
-            this.day = selectedDay.day
+            // this.day = selectedDay.day
+            this.day = 0
             this.prev(box)
           } else if (k1 === this.days.length - 1 || k1 === this.days.length - 2) {
             var nextMonth = this.nextMonth(this.year, this.month)
             this.year = nextMonth.year
             this.month = nextMonth.month
-            this.day = selectedDay.day
+            // this.day = selectedDay.day
+            this.day = 0
             this.next(box)
           }
           this.curMonth(this.year, this.month, this.day)
@@ -265,8 +279,45 @@
           el.classList.remove('prev')
         }, false)
       },
-      touch: function (e) {
-        console.dir(e)
+      // 日历左右滑动
+      swipe: function (params) {
+        // console.dir(params)
+        // console.dir(params.dir)
+        var dir = params.dir
+        var cbox = document.querySelector('#cBox')
+        if (dir === 'left') {
+          var prevMonth = this.prevMonth(this.year, this.month)
+          this.year = prevMonth.year
+          this.month = prevMonth.month
+          this.day = 0
+          this.prev(cbox)
+        }
+        if (dir === 'right') {
+          var nextMonth = this.nextMonth(this.year, this.month)
+          this.year = nextMonth.year
+          this.month = nextMonth.month
+          this.day = 0
+          this.next(cbox)
+        }
+        this.curMonth(this.year, this.month, this.day)
+      },
+      senddate: function () {
+        this.setmonth(this.monthString)
+        this.$emit('senddate', this.year, this.currentMonth, this.day)
+      }
+      // sendMonth: function () {
+      //   var monthString = this.monthString
+      //   this.$store.dispatch('getmonth', {
+      //     monthString: monthString
+      //   })
+      // }
+    },
+    watch: {
+      days: {
+        handler: function (v, nv) {
+          this.senddate()
+        },
+        deep: true
       }
     }
   }
@@ -279,41 +330,41 @@
     overflow: hidden;
   }
   .calendar-days{
-      width: 3.75rem;
-      text-align: center;
+    width: 3.75rem;
+    text-align: center;
   }
   .calendar-days th{
-      background-color: #F5F6F8;
-      color: #A6AFB8;
-      padding: 0.1rem 0;
-      font-weight: normal;
+    background-color: #F5F6F8;
+    color: #A6AFB8;
+    padding: 0.1rem 0;
+    font-weight: normal;
   }
   .calendar-days th.weekend {
-      color: #F9BF15;
+    color: #F9BF15;
   }
   .calendar-days td{
-      position: relative;
-      color: #3E4D62;
-      padding: 0.185rem 0;
+    position: relative;
+    color: #3E4D62;
+    padding: 0.185rem 0;
   }
   .calendar-days td.selected::before{
-      content: '';
-      width: 0.45rem;
-      height: 0.45rem;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      background-color: #7991E7;
-      border-radius: 50%;
-      margin-top: -0.225rem;
-      margin-left: -0.225rem;
+    content: '';
+    width: 0.45rem;
+    height: 0.45rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background-color: #7991E7;
+    border-radius: 50%;
+    margin-top: -0.225rem;
+    margin-left: -0.225rem;
   }
   .calendar-days td.selected span{
-      position: relative;
-      color: #fff;
+    position: relative;
+    color: #fff;
   }
   .calendar-days td.disabled{
-      color: #DADBE0;
+    color: #DADBE0;
   }
   .calendar-list {
     width: 11.25rem;
@@ -331,4 +382,8 @@
     transform: translateX(-7.5rem);
     transition: all .3s ease;
   }
+  .slide-enter{}
+  .slide-enter-active{}
+  .slide-leave{}
+  .slide-leave-active{}
 </style>
