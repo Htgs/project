@@ -9,7 +9,6 @@
         </th>
       </tr>
     </table>
-    <transition name="slide">
     <ul class="calendar-list clearfix" id="cBox"
       v-gesture:swiper="{methods:swipe}">
       <li>
@@ -48,7 +47,7 @@
         </table>
       </li>
     </ul>
-    </transition>
+    </div>
   </div>
 </template>
 
@@ -84,11 +83,16 @@
         nextDays: [],
         today: [],
         currentMonth: Number,
-        monthString: ''
+        monthString: '',
+        // 记录选中的日期
+        selectedDate: {
+          y: 0,
+          m: 0,
+          d: 0
+        }
       }
     },
     methods: {
-
       ...mapMutations([
         'setmonth'
       ]),
@@ -97,18 +101,12 @@
         this.year = now.getFullYear()
         this.month = now.getMonth()
         this.day = now.getDate()
-        this.monthString = this.months[this.month]
-        // 当前月的上月
-        var prevMonth = this.prevMonth(this.year, this.month)
-        this.prevDays = this.render(prevMonth.year, prevMonth.month)
-        // this.prevDays = this.prevMonth(this.year, this.month)
-        // 当前月
-        this.days = this.render(this.year, this.month)
-        // 当前月的下月
-        var nextMonth = this.nextMonth(this.year, this.month)
-        this.nextDays = this.render(nextMonth.year, nextMonth.month)
-        // this.nextDays = this.nextMonth(this.year, this.month)
+        this.selectedDate.y = now.getFullYear()
+        this.selectedDate.m = now.getMonth()
+        this.selectedDate.d = now.getDate()
+        this.curMonth(this.year, this.month, this.day)
       },
+      // 根据年月渲染出当年当月的数组，并且返回该数组
       render: function (y, m) {
         var firstDayOfMonth = new Date(y, m, 1).getDay() // 获取当月第一天是星期几
         var lastDateOfMonth = new Date(y, m + 1, 0).getDate() // 获取当月一共有多少天
@@ -133,22 +131,27 @@
               k++
             }
           }
-          var chk = new Date()
-          var chkY = chk.getFullYear()
-          var chkM = chk.getMonth()
-          if (chkY === y && chkM === m && i === this.day) {
-            temp[line].push({
-              day: i,
-              selected: true
-            })
-            this.today = [line, temp[line].length - 1]
-          } else {
-            var options = {
-              day: i,
-              selected: false
-            }
-            temp[line].push(options)
+          // var chk = new Date()
+          // var chkY = chk.getFullYear()
+          // var chkM = chk.getMonth()
+          // if (chkY === y && chkM === m && i === this.day) {
+          //   temp[line].push({
+          //     day: i,
+          //     selected: true
+          //   })
+          //   this.today = [line, temp[line].length - 1]
+          // } else {
+          //   var options = {
+          //     day: i,
+          //     selected: false
+          //   }
+          //   temp[line].push(options)
+          // }
+          var options = {
+            day: i,
+            selected: false
           }
+          temp[line].push(options)
           if (dow === 6) line++
           else if (i === lastDateOfMonth) {
             var q = 1
@@ -184,7 +187,20 @@
         }
         return temp
       },
-      // 上月
+      // 判断是否是选中的日期,无返回值
+      isSelectedDate: function (date) {
+        console.dir(this)
+        if (date.y === this.year && date.m === this.month) {
+          this.days.forEach(v => {
+            v.forEach(vv => {
+              if (!vv.disabled && vv.day === this.day) {
+                vv.selected = true
+              }
+            })
+          })
+        }
+      },
+      // 获取当前月份的上个月，返回一个对象
       prevMonth: function (y, m) {
         var year = y
         var month = m
@@ -199,7 +215,7 @@
           month: month
         }
       },
-      //  下月
+      // 获取当前月份的下个月，返回一个对象
       nextMonth: function (y, m) {
         var year = y
         var month = m
@@ -233,33 +249,38 @@
             this.year = prevMonth.year
             this.month = prevMonth.month
             // this.day = selectedDay.day
-            this.day = 0
+            // this.day = 0
             this.prev(box)
           } else if (k1 === this.days.length - 1 || k1 === this.days.length - 2) {
             var nextMonth = this.nextMonth(this.year, this.month)
             this.year = nextMonth.year
             this.month = nextMonth.month
             // this.day = selectedDay.day
-            this.day = 0
+            // this.day = 0
             this.next(box)
           }
-          this.curMonth(this.year, this.month, this.day)
+          this.curMonth(this.year, this.month)
         } else {
           this.day = selectedDay.day
           this.days[k1][k2].selected = true
+          this.selectedDate.y = this.year
+          this.selectedDate.m = this.month
+          this.selectedDate.d = this.day
         }
       },
-      curMonth: function (y, m, d) {
+      // 重新渲染当前月份和当前月份的上月已经下月
+      curMonth: function (y, m) {
         this.monthString = this.months[m]
-        // 当前月
-        this.days = this.render(y, m)
         // 当前月的上月
         var prevMonth = this.prevMonth(y, m)
         this.prevDays = this.render(prevMonth.year, prevMonth.month)
+        // 当前月
+        this.days = this.render(y, m)
         // this.prevDays = this.prevMonth(this.year, this.month)
         // 当前月的下月
         var nextMonth = this.nextMonth(y, m)
         this.nextDays = this.render(nextMonth.year, nextMonth.month)
+        this.isSelectedDate(this.selectedDate)
       },
       prev: function (el) {
         el.classList.add('prev')
@@ -289,28 +310,23 @@
           var prevMonth = this.prevMonth(this.year, this.month)
           this.year = prevMonth.year
           this.month = prevMonth.month
-          this.day = 0
+          // this.day = 0
           this.prev(cbox)
         }
         if (dir === 'right') {
           var nextMonth = this.nextMonth(this.year, this.month)
           this.year = nextMonth.year
           this.month = nextMonth.month
-          this.day = 0
+          // this.day = 0
           this.next(cbox)
         }
-        this.curMonth(this.year, this.month, this.day)
+        this.curMonth(this.year, this.month)
       },
       senddate: function () {
         this.setmonth(this.monthString)
-        this.$emit('senddate', this.year, this.currentMonth, this.day)
+        this.$emit('senddate', this.selectedDate)
+        // this.$emit('senddate', this.year, this.currentMonth, this.day)
       }
-      // sendMonth: function () {
-      //   var monthString = this.monthString
-      //   this.$store.dispatch('getmonth', {
-      //     monthString: monthString
-      //   })
-      // }
     },
     watch: {
       days: {
@@ -382,8 +398,29 @@
     transform: translateX(-7.5rem);
     transition: all .3s ease;
   }
-  .slide-enter{}
+/*  .slide-enter{}
   .slide-enter-active{}
   .slide-leave{}
-  .slide-leave-active{}
+  .slide-leave-active{}*/
+
+  /* Enter and leave animations can use different */
+  /* durations and timing functions.              */
+  .slideleft-enter-active {
+    transition: all .3s ease;
+  }
+  .slideleft-leave-active {
+    transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  }
+  .slideleft-enter, .slideleft-leave-to {
+    transform: translateX(0rem);
+  }
+  .slideright-enter-active {
+    transition: all .3s ease;
+  }
+  .slideright-leave-active {
+    transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  }
+  .slideright-enter, .slideright-leave-to {
+    transform: translateX(-7.5rem);
+  }
 </style>

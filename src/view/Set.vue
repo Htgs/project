@@ -12,6 +12,9 @@
   var SetTime = require('../components/SetTime.vue')
   var SetButton = require('../components/SetButton.vue')
 
+  // 根据服务器过来的数据进行渲染
+  // 有关这个计划的数据
+  
   export default {
     name: 'set',
     data () {
@@ -44,10 +47,10 @@
       changeda: function () {
         this.curHash += 'r'
       },
-      getdate: function (y, m, d) {
-        this.calendar.year = y
-        this.calendar.month = m
-        this.calendar.day = d
+      getdate: function (date) {
+        this.calendar.year = date.y
+        this.calendar.month = date.m + 1
+        this.calendar.day = date.d
         console.dir(this)
       }
     },

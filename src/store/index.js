@@ -36,7 +36,18 @@ export default new Vuex.Store({
   // strict: debug,
   state: {
     title: '生产计划管理',
-    monthString: ''
+    year: {
+      type: Number,
+      default: 0
+    },
+    month: {
+      type: Number,
+      default: 0
+    },
+    day: {
+      type: Number,
+      default: 0
+    }
   },
   getters: {
     monthString: state => {
@@ -44,10 +55,6 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    getmonth (s, payload) {
-      s.monthString = payload.monthString
-      this.commit('setmonth')
-    },
     setmonth (s, payload) {
       s.title = payload + '月份'
     },

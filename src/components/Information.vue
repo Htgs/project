@@ -61,7 +61,7 @@
       go: function () {
         event.stopPropagation()
         router.push({
-          path: '/set:' + this.pid
+          path: '/set' + this.pid
         })
       }
     }

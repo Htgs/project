@@ -14,6 +14,7 @@
 
 <script>
 
+  import { mapMutations } from 'vuex'
   import router from '../router/index'
 
   export default {
@@ -31,8 +32,12 @@
       }
     },
     methods: {
+      ...mapMutations([
+        'settitle'
+      ]),
       goback () {
         router.go(-1)
+        this.settitle()
       }
     },
     computed: {
